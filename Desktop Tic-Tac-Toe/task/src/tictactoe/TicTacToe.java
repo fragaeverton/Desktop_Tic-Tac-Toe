@@ -1,15 +1,17 @@
 package tictactoe;
 
-import tictactoe.enums.Players;
 import tictactoe.enums.Status;
 
 import javax.swing.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TicTacToe extends JFrame {
-    public static JButton  resetBtn;
+    public static JButton resetButton, playerOneBtn, playerTwoBtn;
     public static JButton[] aButtons = new JButton[9];
     public static String[] buttonNames  = new String[]{"A3", "B3", "C3", "A2", "B2", "C2", "A1", "B1", "C1"};
-    public static String currentPlayer = String.valueOf(Players.X);
+    public static List<Player> players = new ArrayList<>();
+    public static Player playerTurn;
     public static Status statusGame = Status.GAME_IS_NOT_STARTED;
 
     public static void main(String[] args) {
@@ -25,10 +27,13 @@ public class TicTacToe extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(750, 750);
         setLocationRelativeTo(null);
-        add(GameField.createButtonField());
-        statusGame = Status.GAME_IN_PROGRESS;
-
+        add(GameField.createFields());
         setVisible(true);
+        players.add(new Player(1, 'X', false, "Human"));
+        players.add(new Player(2, 'O', false, "Human"));
+        playerTurn = players.get(0);
+
+
     }
 
 
