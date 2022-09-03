@@ -4,7 +4,10 @@ import tictactoe.enums.Status;
 
 import javax.swing.*;
 
-import static tictactoe.GameField.count;
+import java.util.Arrays;
+import java.util.stream.IntStream;
+import java.util.stream.LongStream;
+
 import static tictactoe.TicTacToe.*;
 
 public class Rules {
@@ -44,8 +47,9 @@ public class Rules {
         if(aButtons[0].getText().equals(aButtons[4].getText()) && aButtons[8].getText().equals(aButtons[0].getText()) && !aButtons[0].getText().equals(" ")){
             statusGame = Status.valueOf(aButtons[0].getText() + "_WINS");
             isOver = true;
-        } else if(count == 8){
+        } else if(Arrays.stream(aButtons).noneMatch(e -> e.getText().equals(" "))){
             statusGame = Status.DRAW;
+            isOver = true;
         }
         return isOver;
     }

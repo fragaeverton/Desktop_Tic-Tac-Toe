@@ -1,14 +1,18 @@
 package tictactoe;
 
+import tictactoe.enums.MenuNames;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 import static tictactoe.TicTacToe.*;
 
 
 public class GameField extends JPanel {
     static JLabel statusLabel = new JLabel(TicTacToe.statusGame.getStatusName());
-    public static int count = 0;
 
     public static JPanel createFields() {
 
@@ -16,16 +20,50 @@ public class GameField extends JPanel {
         gamePanel.setLayout(new BorderLayout());
 
         gamePanel.add(createButtonsPanel(), BorderLayout.CENTER);
-        gamePanel.add(createControlPanel(), BorderLayout.NORTH);
+
+        JPanel topPanel = new JPanel();
+        topPanel.setLayout(new GridLayout(2, 1, 1, 1));
+        topPanel.add(createMenu());
+        topPanel.add(createControlPanel());
+        gamePanel.add(topPanel, BorderLayout.NORTH);
+
         gamePanel.add(createStatusBar(), BorderLayout.SOUTH);
 
         return gamePanel;
     }
 
-    private static JPanel createControlPanel(){
+    private static JMenuBar createMenu() {
+        List<MenuNames> menuList = new ArrayList<>();
+        menuList.add(MenuNames.HUMAN_HUMAN);
+        menuList.add(MenuNames.HUMAN_ROBOT);
+        menuList.add(MenuNames.ROBOT_HUMAN);
+        menuList.add(MenuNames.ROBOT_ROBOT);
+        menuList.add(MenuNames.EXIT);
+        JMenuBar menuBar = new JMenuBar();
+        JMenu menuGame = new JMenu("Game");
+        menuGame.setName("MenuGame");
+        menuGame.setMnemonic(KeyEvent.VK_G);
+        setMenu(menuGame, menuList);
+        menuBar.add(menuGame);
+        return menuBar;
+    }
+
+    private static void setMenu(JMenu menuGame, List<MenuNames> menuList) {
+        menuList.forEach((m) -> {
+            if(m.equals(MenuNames.EXIT)){
+                menuGame.addSeparator();
+            }
+            JMenuItem menuItem = new JMenuItem(m.getText());
+            menuItem.setName(m.getName());
+            menuItem.addActionListener(ButtonListeners::menuListen);
+            menuGame.add(menuItem);
+        });
+    }
+
+    private static JPanel createControlPanel() {
         var playersField = new JPanel();
         playersField.setLayout(new GridLayout(1, 3, 1, 1));
-        playerOneBtn = new JButton("Human");
+        playerOneBtn = new JButton(HUMAN);
         playerOneBtn.setName("ButtonPlayer1");
         playerOneBtn.addActionListener(actionEvent -> ButtonListeners.listen(playerOneBtn));
         playersField.add(playerOneBtn);
@@ -33,11 +71,11 @@ public class GameField extends JPanel {
         resetButton.setName("ButtonStartReset");
         resetButton.addActionListener(actionEvent -> ButtonListeners.listen(resetButton));
         playersField.add(resetButton);
-        playerTwoBtn = new JButton("Human");
+        playerTwoBtn = new JButton(HUMAN);
         playerTwoBtn.setName("ButtonPlayer2");
         playerTwoBtn.addActionListener(actionEvent -> ButtonListeners.listen(playerTwoBtn));
         playersField.add(playerTwoBtn);
-        ButtonListeners.reset(resetButton);
+        ButtonListeners.reset();
         return playersField;
 
     }
